@@ -89,21 +89,65 @@ namespace AnthonySantosInventoryManagementSystem
                 throw new Exception("Failed to delete part: " + ex.Message);
             }
         }
-    }
 
-    public class ApiPart
-    {
-        public int part_id { get; set; }
-        public string part_name { get; set; }
-        public double cost { get; set; }
-        public string sku { get; set; }
-        public string category { get; set; }
-        public int quantity_on_hand { get; set; }
-    }
 
-    public class ApiResponse
-    {
-        public bool success { get; set; }
-        public List<ApiPart> parts { get; set; }
+        public static async Task<bool> RegisterAsync(string username, string email, string password)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/api/auth/register";
+                var data = new
+                {
+                    username = username,
+                    email = email,
+                    password = password
+                };
+                string json = JsonConvert.SerializeObject(data);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to register: " + ex.Message);
+            }
+        }
+
+        public static async Task<bool> LoginAsync(string username, string password)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/api/auth/login";
+                var data = new
+                {
+                    username = username,
+                    password = password
+                };
+                string json = JsonConvert.SerializeObject(data);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to login: " + ex.Message);
+            }
+        }
+
+        public class ApiPart
+        {
+            public int part_id { get; set; }
+            public string part_name { get; set; }
+            public double cost { get; set; }
+            public string sku { get; set; }
+            public string category { get; set; }
+            public int quantity_on_hand { get; set; }
+        }
+
+        public class ApiResponse
+        {
+            public bool success { get; set; }
+            public List<ApiPart> parts { get; set; }
+        }
     }
 }

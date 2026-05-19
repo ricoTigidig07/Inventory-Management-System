@@ -65,6 +65,12 @@
     <Compile Include="ApiService.cs" />
     <Compile Include="Inhouse.cs" />
     <Compile Include="Inventory.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModifyPartScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,7 +83,6 @@
     <Compile Include="MainScreen.Designer.cs">
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="AnthonySantosInventoryManagmentSystem.cs" />
     <Compile Include="ModifyProductScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,12 +92,22 @@
     <Compile Include="Outsourced.cs" />
     <Compile Include="Part.cs" />
     <Compile Include="Product.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegisterForm.Designer.cs">
+      <DependentUpon>RegisterForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AddPartScreen.resx">
       <DependentUpon>AddPartScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddProductScreen.resx">
       <DependentUpon>AddProductScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModifyPartScreen.resx">
       <DependentUpon>ModifyPartScreen.cs</DependentUpon>
