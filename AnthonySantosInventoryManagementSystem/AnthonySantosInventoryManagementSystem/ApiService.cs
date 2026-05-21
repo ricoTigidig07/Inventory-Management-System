@@ -10,7 +10,7 @@ namespace AnthonySantosInventoryManagementSystem
     public class ApiService
     {
         private static readonly HttpClient client = new HttpClient();
-        private const string BaseUrl = "http://localhost:5000";
+        private const string BaseUrl = "http://localhost:5001";
 
         public static async Task<List<ApiPart>> GetPartsAsync()
         {

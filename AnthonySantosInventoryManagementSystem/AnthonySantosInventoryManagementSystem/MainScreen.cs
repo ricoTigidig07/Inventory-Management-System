@@ -30,7 +30,6 @@ namespace AnthonySantosInventoryManagementSystem
             InitializeComponent();
             //BuildPartList();
             FormatDGV(DataGridViewPart);
-            FormatDGV(DataGridViewProduct);
             LoadPartsFromApi();
             Display();
         }
@@ -49,20 +48,6 @@ namespace AnthonySantosInventoryManagementSystem
             }
         }
 
-        public void CurrentSelectedProduct()
-        {
-            if (IndexProduct >= 0)
-            {
-                for (int j = 0; j < Inventory.MyProductList.Count; j++)
-                {
-                    if (Inventory.MyProductList[j].ProductID == (int)DataGridViewProduct.Rows[IndexProduct].Cells[0].Value)
-                    {
-                        selectedProduct = Inventory.MyProductList[j];
-                    }
-                }
-            }
-        }
-
         //formatting for the DGV
         private void FormatDGV(DataGridView d)
         {
@@ -76,11 +61,11 @@ namespace AnthonySantosInventoryManagementSystem
         private void Display()
         {
             DataGridViewPart.AutoGenerateColumns = false;
-            DataGridViewProduct.AutoGenerateColumns = false;
+
             DataGridViewPart.DataSource = Inventory.MyPartList;
-            DataGridViewProduct.DataSource = Inventory.MyProductList;
+
             DataGridViewPart.ClearSelection();
-            DataGridViewProduct.ClearSelection();
+
         }
 
         private async void LoadPartsFromApi()
@@ -117,15 +102,6 @@ namespace AnthonySantosInventoryManagementSystem
             idxSelectedPart = DataGridViewPart.CurrentCell.RowIndex;
             Inventory.CurrentPart = Inventory.LookupPart((int)DataGridViewPart.Rows[idxSelectedPart].Cells[0].Value);
             DataGridViewPart.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Yellow;
-        }
-
-        private void DataGridViewProduct_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //Index = DataGridViewPart.CurrentCell.RowIndex;
-            IndexProduct = e.RowIndex;
-            idxSelectedProduct = DataGridViewProduct.CurrentCell.RowIndex;
-            Inventory.CurrentProduct = Inventory.LookupProduct((int)DataGridViewProduct.Rows[idxSelectedProduct].Cells[0].Value);
-            DataGridViewProduct.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Yellow;
         }
 
         private void InventoryManagementMainScreen_Load(object sender, EventArgs e)
@@ -170,21 +146,6 @@ namespace AnthonySantosInventoryManagementSystem
             //Application.Exit();
         }
 
-        private void ButtonModifyProduct_Click(object sender, EventArgs e)
-        {
-            if (IndexProduct >= 0)
-            {
-                CurrentSelectedProduct();
-                ModifyProductScreen modifyProduct = new ModifyProductScreen();
-                modifyProduct.Show();
-                
-            }
-            else
-            {
-                MessageBox.Show("Select a product to Modify.");
-            }
-        }
-
         private async void ButtonDeletePart_Click(object sender, EventArgs e)
         {
             if (Index >= 0)
@@ -224,68 +185,6 @@ namespace AnthonySantosInventoryManagementSystem
             else
             {
                 MessageBox.Show("Select a part");
-            }
-        }
-
-        private void ButtonDeleteProduct_Click(object sender, EventArgs e)
-        {
-            if (IndexProduct >= 0)
-            {
-                for (int j = 0; j < Inventory.MyProductList.Count; j++)
-                {
-                    if (Inventory.MyProductList[j].ProductID == (int)DataGridViewProduct.Rows[IndexProduct].Cells[0].Value)
-                    {
-                        if (MessageBox.Show("Please Confirm Delete Action", "Message", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            Inventory.MyProductList.RemoveAt(j);
-                        }
-                        //Inventory.MyProductList.RemoveAt(j);
-                    }
-                }
-                Display();
-                Index = -1;
-            }
-            else
-            {
-                MessageBox.Show("Select a product");
-            }
-        }
-
-        private void ButtonSearchProduct_Click(object sender, EventArgs e)
-        {
-            if (TextBoxSearchProduct.Text == "")
-            {
-                MessageBox.Show("Please enter the name of the product to be searched.");
-            }
-            else
-            {
-                string x = TextBoxSearchProduct.Text;
-                int count = 0;
-
-                for (int j = 0; j < Inventory.MyProductList.Count; j++)
-                {
-
-
-                    if (Inventory.MyProductList[j].Name.Equals(x))
-                    {
-                        DataGridViewProduct.ClearSelection();
-                        DataGridViewProduct.Rows[j].Selected = true;
-                        count++;
-                    }
-
-
-                }
-
-                if (count < 1)
-                {
-                    MessageBox.Show("Product Name not found exactly as searched.(Case Sensitive)");
-                }
-
-                //                if (dataGridView.Rows[i].Cells[j].Value.ToString().Contains(searchText)
-                //{
-                //                    dataGridView.Rows[i].Cells[j].Selected = true;
-                //                }
-
             }
         }
 
@@ -334,14 +233,6 @@ namespace AnthonySantosInventoryManagementSystem
             idxSelectedPart = DataGridViewPart.CurrentCell.RowIndex;
             Inventory.CurrentPart = Inventory.LookupPart((int)DataGridViewPart.Rows[idxSelectedPart].Cells[0].Value);
             DataGridViewPart.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Yellow;
-        }
-
-        private void DataGridViewProduct_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            IndexProduct = e.RowIndex;
-            idxSelectedProduct = DataGridViewProduct.CurrentCell.RowIndex;
-            Inventory.CurrentProduct = Inventory.LookupProduct((int)DataGridViewProduct.Rows[idxSelectedProduct].Cells[0].Value);
-            DataGridViewProduct.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Yellow;
         }
 
         private void InventoryManagementSystemMainScreen_Load(object sender, EventArgs e)
