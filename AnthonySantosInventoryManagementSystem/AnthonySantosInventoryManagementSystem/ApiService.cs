@@ -10,16 +10,14 @@ namespace AnthonySantosInventoryManagementSystem
     public class ApiService
     {
         private static readonly HttpClient client = new HttpClient();
-        private const string RepairOSUrl = "http://localhost:5000";
-        private const string AuthUrl = "http://localhost:5001";
+        private const string ApiUrl = "http://localhost:5001";
 
-        // ============ AUTH ENDPOINTS (Standalone API on port 5001) ============
-
+        // ============ AUTH ENDPOINTS ============
         public static async Task<bool> RegisterAsync(string username, string email, string password)
         {
             try
             {
-                string url = $"{AuthUrl}/api/auth/register";
+                string url = $"{ApiUrl}/api/auth/register";
                 var data = new { username = username, email = email, password = password };
                 string json = JsonConvert.SerializeObject(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -36,7 +34,7 @@ namespace AnthonySantosInventoryManagementSystem
         {
             try
             {
-                string url = $"{AuthUrl}/api/auth/login";
+                string url = $"{ApiUrl}/api/auth/login";
                 var data = new { username = username, password = password };
                 string json = JsonConvert.SerializeObject(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -49,13 +47,13 @@ namespace AnthonySantosInventoryManagementSystem
             }
         }
 
-        // ============ PARTS ENDPOINTS (RepairOS on port 5000) ============
+        // ============ PARTS ENDPOINTS (Now using Standalone API on port 5001) ============
 
         public static async Task<List<ApiPart>> GetPartsAsync()
         {
             try
             {
-                string url = $"{RepairOSUrl}/api/parts?tenant_id=1";
+                string url = $"{ApiUrl}/api/parts?tenant_id=1";
                 HttpResponseMessage response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync();
@@ -64,7 +62,7 @@ namespace AnthonySantosInventoryManagementSystem
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to connect to RepairOS API: " + ex.Message);
+                throw new Exception("Failed to connect to API: " + ex.Message);
             }
         }
 
@@ -72,7 +70,7 @@ namespace AnthonySantosInventoryManagementSystem
         {
             try
             {
-                string url = $"{RepairOSUrl}/api/parts";
+                string url = $"{ApiUrl}/api/parts";
                 var data = new
                 {
                     tenant_id = 1,
@@ -98,7 +96,7 @@ namespace AnthonySantosInventoryManagementSystem
         {
             try
             {
-                string url = $"{RepairOSUrl}/api/parts/{partId}";
+                string url = $"{ApiUrl}/api/parts/{partId}";
                 var data = new
                 {
                     part_name = partName,
@@ -123,7 +121,7 @@ namespace AnthonySantosInventoryManagementSystem
         {
             try
             {
-                string url = $"{RepairOSUrl}/api/parts/{partId}";
+                string url = $"{ApiUrl}/api/parts/{partId}";
                 HttpResponseMessage response = await client.DeleteAsync(url);
                 return response.IsSuccessStatusCode;
             }
