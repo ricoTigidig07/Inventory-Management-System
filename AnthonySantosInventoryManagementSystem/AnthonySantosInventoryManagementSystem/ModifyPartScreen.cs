@@ -106,28 +106,72 @@ namespace AnthonySantosInventoryManagementSystem
 
         private async void ButtonModifySave_Click(object sender, EventArgs e)
         {
-            if (isInhouse)
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(TextBoxPartName.Text))
             {
-                Part p = new Inhouse(Convert.ToInt32(TextBoxPartID.Text), TextBoxPartName.Text, Double.Parse(TextBoxPartPriceCost.Text),
-                    Convert.ToInt32(TextBoxPartInv.Text), Convert.ToInt32(TextBoxPartMin.Text), Convert.ToInt32(TextBoxPartMax.Text),
-                    Convert.ToInt32(TextBoxX.Text));
-                Inventory.UpdatePart(p);
+                MessageBox.Show("Please enter a Part Name.", "Validation Error");
+                return;
             }
-            else
+            if (string.IsNullOrWhiteSpace(TextBoxPartPriceCost.Text) || !Double.TryParse(TextBoxPartPriceCost.Text, out _))
             {
-                Part p = new Outsourced(Convert.ToInt32(TextBoxPartID.Text), TextBoxPartName.Text, Double.Parse(TextBoxPartPriceCost.Text),
-                    Convert.ToInt32(TextBoxPartInv.Text), Convert.ToInt32(TextBoxPartMin.Text), Convert.ToInt32(TextBoxPartMax.Text),
-                    TextBoxX.Text);
-                Inventory.UpdatePart(p);
+                MessageBox.Show("Please enter a valid numeric Price/Cost.", "Validation Error");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(TextBoxPartInv.Text) || !Int32.TryParse(TextBoxPartInv.Text, out _))
+            {
+                MessageBox.Show("Please enter a valid numeric Inventory value.", "Validation Error");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(TextBoxPartMin.Text) || !Int32.TryParse(TextBoxPartMin.Text, out _))
+            {
+                MessageBox.Show("Please enter a valid numeric Min value.", "Validation Error");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(TextBoxPartMax.Text) || !Int32.TryParse(TextBoxPartMax.Text, out _))
+            {
+                MessageBox.Show("Please enter a valid numeric Max value.", "Validation Error");
+                return;
+            }
+            if (isInhouse && (string.IsNullOrWhiteSpace(TextBoxX.Text) || !Int32.TryParse(TextBoxX.Text, out _)))
+            {
+                MessageBox.Show("Please enter a valid numeric Machine ID.", "Validation Error");
+                return;
+            }
+            if (!isInhouse && string.IsNullOrWhiteSpace(TextBoxX.Text))
+            {
+                MessageBox.Show("Please enter a Company Name.", "Validation Error");
+                return;
             }
 
-            // Call RepairOS API to update the database
             try
             {
+                // Update local inventory
+                if (isInhouse)
+                {
+                    Part p = new Inhouse(Convert.ToInt32(TextBoxPartID.Text), TextBoxPartName.Text, Double.Parse(TextBoxPartPriceCost.Text),
+                        Convert.ToInt32(TextBoxPartInv.Text), Convert.ToInt32(TextBoxPartMin.Text), Convert.ToInt32(TextBoxPartMax.Text),
+                        Convert.ToInt32(TextBoxX.Text));
+                    Inventory.UpdatePart(p);
+                }
+                else
+                {
+                    Part p = new Outsourced(Convert.ToInt32(TextBoxPartID.Text), TextBoxPartName.Text, Double.Parse(TextBoxPartPriceCost.Text),
+                        Convert.ToInt32(TextBoxPartInv.Text), Convert.ToInt32(TextBoxPartMin.Text), Convert.ToInt32(TextBoxPartMax.Text),
+                        TextBoxX.Text);
+                    Inventory.UpdatePart(p);
+                }
+
+                // Call RepairOS API to update the database with ALL fields
                 int partId = Convert.ToInt32(TextBoxPartID.Text);
                 string partName = TextBoxPartName.Text;
                 double cost = Double.Parse(TextBoxPartPriceCost.Text);
-                bool success = await ApiService.UpdatePartAsync(partId, partName, cost);
+                string sku = TextBoxSKU.Text;
+                string category = TextBoxCategory.Text;
+                string description = TextBoxDescription.Text;
+                string supplier = TextBoxSupplier.Text;
+
+                bool success = await ApiService.UpdatePartAsync(partId, partName, cost, sku, category, description, supplier);
+
                 if (success)
                 {
                     MessageBox.Show("Part updated successfully in RepairOS!", "Success");
